@@ -1,6 +1,6 @@
 # Estimating Incremental Criterion Prediction of Personality Facets over Factors
 
-Version: 30 Jan 2014
+Version: 25 March 2014
 
 ## Description
 This repository includes data, a data processing script, R functions, and
@@ -40,6 +40,8 @@ And then run
 
     library(devtools)
     install_github('personalityfacets', username='jeromyanglim')
+
+Alternatively a copy of the `personalityfacets` package is available in the `local-copy` folder of this repository.
 
 * RStudio may also make it easier to convert the rmd file into a HTML file.
   Although [scripts such as this could be used](http://stackoverflow.com/a/10654295/180892).
