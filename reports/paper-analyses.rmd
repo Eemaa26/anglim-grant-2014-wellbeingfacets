@@ -103,6 +103,9 @@ fa.parallel(ccases[,v$ipip_facets])
 # number of facets loading maximally on theorised factor
 sum(fac$abs_loadings$primaryismax)
 
+# Proportion of variance explained
+fac$factanal
+
 # number of facets loading maximally on factor
 sum(fac$abs_loadings$loadsabove.35)
 
@@ -149,7 +152,8 @@ corfactorwellbeing$table <- correlationMatrixFormatted(ccases[,corfactorwellbein
 
 corfactorwellbeing$table
 write.csv(corfactorwellbeing$table, file='output/corfactorwellbeing.csv')
-minimum_significant_r(n=nrow(ccases))
+minimum_significant_r(n=nrow(ccases), alpha=.05)
+minimum_significant_r(n=nrow(ccases), alpha=.01)
 
 
 # marginalised cross correlations
@@ -276,5 +280,27 @@ write.csv(semipartials, file='output/semipartials.csv')
 
 mean(semipartials[, 'uniques'])
 ```
+
+# Significance of semi-partial r
+```{r}
+semi_partial_r_p <- function(y, x, controls, data, alpha = .01) {
+    Formula_1 <- formula(paste(y, '~',  paste(controls, collapse=" + ")))
+    Formula_2 <- formula(paste(y, '~',  paste(c(controls,x), collapse=" + ")))
+    lm_1 <- lm(Formula_1, data=data)
+    lm_2 <- lm(Formula_2, data=data)
+    fit <- anova(lm_1, lm_2)
+    fit$Pr[2] < alpha
+}
+srp <- matrix(FALSE, nrow=length(v$ipip_facets), ncol= length(v$wellbeing),
+       dimnames=list(v$ipip_facets, v$wellbeing))
+for (dv in v$wellbeing) {
+    for (facet in v$ipip_facets) {
+        srp[facet, dv] <- semi_partial_r_p(dv, facet, v$ipip_factors, ccases, .001)
+    }
+}
+
+write.csv(srp, file='output/semipartial_significance.csv')
+```
+
 
 
